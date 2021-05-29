@@ -11,7 +11,6 @@ def load_train(path='data/sales_train.csv'):
     train = pd.read_csv(path)
     tmp = train.groupby(['date_block_num', 'shop_id', 'item_id'])
     out = DataFrame({
-        # 'avg_price': tmp['item_price'].mean(),
         'cnt/m': tmp['item_cnt_day'].sum()
     }).reset_index()
     return out
