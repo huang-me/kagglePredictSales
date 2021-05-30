@@ -17,13 +17,14 @@ if __name__ == "__main__":
     df_train, df_test = train_test_split(df, test_size=0.2, random_state=1)
     # generators
     bacth_size = 16
-    hist = 30
-    test_gen = generator(df_test, bacth_size, hist)
-    train_gen = generator(df_train, bacth_size, hist)
+    hist = 15
+    ranges = [0, 1, 2]
+    test_gen = generator(df_test, ranges, bacth_size, hist)
+    train_gen = generator(df_train, ranges, bacth_size, hist)
     # get model and train
-    model = getModel([hist+2])
+    model = getModel([hist+len(ranges)])
     model.summary()
-    model_checkpoint = ModelCheckpoint('model.hdf5', monitor='val_loss',verbose=1, save_best_only=True)
+    model_checkpoint = ModelCheckpoint('model.hdf5', monitor='val_loss', verbose=0, save_best_only=True)
     model.fit(
         train_gen, 
         validation_data=test_gen, 
@@ -34,7 +35,6 @@ if __name__ == "__main__":
         callbacks=[model_checkpoint]
     )
     # get predict data
-    ranges = [0, 1]
     ranges.extend(range(35-hist, 35))
     x_pred = df.iloc[:, ranges]
     result = model.predict(x_pred)

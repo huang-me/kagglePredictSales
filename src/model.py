@@ -3,14 +3,14 @@ from tensorflow import keras
 
 def getModel(shape):
     inputs = keras.Input(shape=shape)
-    dense1 = Dense(128)(inputs)
-    dense2 = Dense(256)(dense1)
-    outputs = Dense(1)(dense2)
+    dense1 = Dense(256)(inputs)
+    dense2 = Dense(512)(dense1)
+    outputs = Dense(1, activation="relu")(dense2)
     model = keras.Model(inputs, outputs)
 
     model.compile(
         optimizer="rmsprop",
         loss="mse",
-        metrics="acc"
+        metrics=["acc"]
     )
     return model
