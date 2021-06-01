@@ -13,5 +13,7 @@ def generator(df, ranges, batch_size=16, hist=10):
             out_x.append( np.array(df.iloc[i, r]).astype('int') )
             out_y.append( df.iloc[i, start+hist] )
             if len(out_y) == batch_size:
+                out_x = np.array(out_x)[..., np.newaxis]
+                out_y = np.array(out_y)[..., np.newaxis]
                 yield (np.array(out_x), np.array(out_y))
                 out_x, out_y = [], []

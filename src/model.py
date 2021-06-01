@@ -1,11 +1,11 @@
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, LSTM, Bidirectional
 from tensorflow import keras
 
 def getModel(shape):
     inputs = keras.Input(shape=shape)
-    dense1 = Dense(256)(inputs)
-    dense2 = Dense(512)(dense1)
-    outputs = Dense(1, activation="relu")(dense2)
+    bilstm1 = Bidirectional(LSTM(128, return_sequences=True))(inputs)
+    bilstm2 = Bidirectional(LSTM(128))(bilstm1)
+    outputs = Dense(1)(bilstm2)
     model = keras.Model(inputs, outputs)
 
     model.compile(

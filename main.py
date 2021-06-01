@@ -12,17 +12,17 @@ import pandas as pd
 
 if __name__ == "__main__":
     data = load_train()
-    df = get_train(data)
+    df, df_pred = get_train(data)
     # train test split
     df_train, df_test = train_test_split(df, test_size=0.2, random_state=1)
     # generators
     bacth_size = 16
-    hist = 15
+    hist = 20
     ranges = [0, 1, 2]
     test_gen = generator(df_test, ranges, bacth_size, hist)
     train_gen = generator(df_train, ranges, bacth_size, hist)
     # get model and train
-    model = getModel([hist+len(ranges)])
+    model = getModel([hist+len(ranges), 1])
     model.summary()
     model_checkpoint = ModelCheckpoint('model.hdf5', monitor='val_loss', verbose=0, save_best_only=True)
     model.fit(
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     )
     # get predict data
     ranges.extend(range(35-hist, 35))
-    x_pred = df.iloc[:, ranges]
+    x_pred = df_pred.iloc[:, ranges]
     result = model.predict(x_pred)
     
     df_submit = pd.read_csv('data/sample_submission.csv')
