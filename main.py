@@ -1,4 +1,5 @@
 from src import load_train, get_train, generator, getModel
+from dataProcessing import fullPreprocess
 from tensorflow.keras import callbacks
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
@@ -13,8 +14,9 @@ if __name__ == "__main__":
     # disbale gpu
     os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     # data
-    data = load_train()
-    df = get_train(data)
+    if (not os.path.exists('processed.csv')):
+        fullPreprocess()
+    df = pd.read_csv('processed.csv')
     # train test split
     df_train, df_test = train_test_split(df, test_size=0.2, random_state=1)
     # generators
