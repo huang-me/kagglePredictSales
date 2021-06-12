@@ -1,16 +1,18 @@
+from src import load_train, get_train, generator, getModel
 from tensorflow.keras import callbacks
-from src import load_train, get_train
-from src.generator import generator
-from src.model import getModel
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import SGDRegressor, LinearRegression
 from tensorflow.keras.callbacks import ModelCheckpoint
 
+import os
 import numpy as np
 import pandas as pd
 
 if __name__ == "__main__":
+    # disbale gpu
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+    # data
     data = load_train()
     df = get_train(data)
     # train test split
