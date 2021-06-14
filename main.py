@@ -5,8 +5,8 @@ from src import load_train, get_train
 # from src.model import getModel
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import SGDRegressor, LinearRegression, LogisticRegression
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 
 import numpy as np
@@ -28,6 +28,7 @@ if __name__ == "__main__":
     y_test =  np.array(df_test.iloc[:, -1:])
 
     model = DecisionTreeRegressor()
+    # model = RandomForestRegressor()
     model.fit(x_train, y_train)
 
     print('train acc:', mean_squared_error(y_train, model.predict(x_train), squared=False))
