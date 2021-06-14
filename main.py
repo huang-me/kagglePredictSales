@@ -18,7 +18,7 @@ if __name__ == "__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     # data
     data = load_train()
-    df = get_train(data)
+    df, df_pred = get_train(data)
     # train test split
     df_train, df_test = train_test_split(df, test_size=0.2, random_state=1)
 
@@ -26,14 +26,14 @@ if __name__ == "__main__":
     y_train = np.array(df_train.iloc[:, -1:])
     x_test =  np.array(df_test.iloc[:, -32:-1])
     y_test =  np.array(df_test.iloc[:, -1:])
-    
+
     model = DecisionTreeRegressor()
     model.fit(x_train, y_train)
 
     print('train acc:', mean_squared_error(y_train, model.predict(x_train), squared=False))
     print('test acc:', mean_squared_error(y_test, model.predict(x_test), squared=False))
 
-    x_pred = df.iloc[:, -31:]
+    x_pred = df_pred.iloc[:, -31:]
     result = model.predict(x_pred)
     
     df_submit = pd.read_csv('data/sample_submission.csv')

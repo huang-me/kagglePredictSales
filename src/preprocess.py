@@ -13,23 +13,26 @@ def get_train(data):
     data.reset_index(inplace=True)
 
     # merge data and test
-    train_data = pd.merge(test, data, on=['shop_id', 'item_id'], how='left', sort=False)
-    train_data = train_data.drop(['ID'], axis=1)
-    train_data = train_data.fillna(0)
+    test_data = pd.merge(test, data, on=['shop_id', 'item_id'], how='left', sort=False)
+    test_data = test_data.drop(['ID'], axis=1)
+    test_data = test_data.fillna(0)
 
     # get item category id
     items = items.drop(['item_name'], axis=1)
-    train_data = train_data.merge(items, on=['item_id'], how='left', sort=False)
+    train_data = data.merge(items, on=['item_id'], how='left', sort=False)
     train_data = train_data.fillna(-1)
+    test_data = test_data.merge(items, on=['item_id'], how='left', sort=False)
+    test_data = test_data.fillna(-1)
 
-    # reorder columns
-    cols = list(train_data.columns.values)
+    cols = list(test_data.columns.values)
     cols = cols[-1:] + cols[:-1]
     train_data = train_data[cols]
+    test_data = test_data[cols]
 
-    print('***\ntrain_data\n', train_data.head())
+    print(f'***\ntrain_data {train_data.shape}\n', train_data.head())
+    print(f'***\ntest_data {test_data.shape}\n', test_data.head())
 
-    return train_data
+    return train_data, test_data
 
 def genX(df, ranges, batch_size=16, hist=10):
     indices = np.arange(df.shape[0])
