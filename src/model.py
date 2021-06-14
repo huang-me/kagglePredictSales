@@ -3,9 +3,9 @@ from tensorflow import keras
 
 def getModel(shape):
     inputs = keras.Input(shape=shape)
-    dense1 = Dense(256)(inputs)
-    dense2 = Dense(512)(dense1)
-    outputs = Dense(1, activation="relu")(dense2)
+    dense1 = Dense(512)(inputs)
+    dense2 = Dense(1024)(dense1)
+    outputs = Dense(1)(dense2)
     model = keras.Model(inputs, outputs)
 
     model.compile(
