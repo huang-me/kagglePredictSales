@@ -14,3 +14,4 @@ def load_train(path='data/sales_train.csv'):
         'cnt/m': tmp['item_cnt_day'].sum()
     }).reset_index()
     return out
+
