@@ -13,14 +13,19 @@ def get_train(data):
     data.reset_index(inplace=True)
 
     # merge data and test
-    train_data = pd.merge(test, data, on=['shop_id', 'item_id'], how='left')
+    train_data = pd.merge(test, data, on=['shop_id', 'item_id'], how='left', sort=False)
     train_data = train_data.drop(['ID'], axis=1)
     train_data = train_data.fillna(0)
 
     # get item category id
     items = items.drop(['item_name'], axis=1)
-    train_data = pd.merge(items, train_data, on=['item_id'])
+    train_data = train_data.merge(items, on=['item_id'], how='left', sort=False)
     train_data = train_data.fillna(-1)
+
+    # reorder columns
+    cols = list(train_data.columns.values)
+    cols = cols[-1:] + cols[:-1]
+    train_data = train_data[cols]
 
     print('***\ntrain_data\n', train_data.head())
 
