@@ -1,42 +1,39 @@
-from tensorflow.keras import callbacks
+# from tensorflow.keras import callbacks
+# from tensorflow.keras.callbacks import ModelCheckpoint
 from src import load_train, get_train
-from src.generator import generator
-from src.model import getModel
+# from src.generator import generator
+# from src.model import getModel
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import SGDRegressor, LinearRegression
-from tensorflow.keras.callbacks import ModelCheckpoint
+from sklearn.linear_model import SGDRegressor, LinearRegression, LogisticRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.svm import SVR
 
 import numpy as np
 import pandas as pd
+import os
 
 if __name__ == "__main__":
+    # disbale gpu
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+    # data
     data = load_train()
     df = get_train(data)
     # train test split
     df_train, df_test = train_test_split(df, test_size=0.2, random_state=1)
-    # generators
-    bacth_size = 16
-    hist = 15
-    ranges = [0, 1, 2]
-    test_gen = generator(df_test, ranges, bacth_size, hist)
-    train_gen = generator(df_train, ranges, bacth_size, hist)
-    # get model and train
-    model = getModel([hist+len(ranges)])
-    model.summary()
-    model_checkpoint = ModelCheckpoint('model.hdf5', monitor='val_loss', verbose=0, save_best_only=True)
-    model.fit(
-        train_gen, 
-        validation_data=test_gen, 
-        # epochs=3, 
-        epochs=10, 
-        steps_per_epoch=2000, 
-        validation_steps=200,
-        callbacks=[model_checkpoint]
-    )
-    # get predict data
-    ranges.extend(range(35-hist, 35))
-    x_pred = df.iloc[:, ranges]
+
+    x_train = np.array(df_train.iloc[:, -32:-1])
+    y_train = np.array(df_train.iloc[:, -1:])
+    x_test =  np.array(df_test.iloc[:, -32:-1])
+    y_test =  np.array(df_test.iloc[:, -1:])
+    
+    model = DecisionTreeRegressor()
+    model.fit(x_train, y_train)
+
+    print('train acc:', mean_squared_error(y_train, model.predict(x_train), squared=False))
+    print('test acc:', mean_squared_error(y_test, model.predict(x_test), squared=False))
+
+    x_pred = df.iloc[:, -31:]
     result = model.predict(x_pred)
     
     df_submit = pd.read_csv('data/sample_submission.csv')
