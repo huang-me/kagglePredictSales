@@ -19,7 +19,7 @@ def getModel(shape):
     model.compile(
         optimizer="rmsprop",
         loss="mse",
-        metrics=["val_loss"]
-        #metrics=tf.keras.metrics.MeanSquaredError
+        #metrics=["val_loss"]
+        metrics=tf.keras.metrics.MeanSquaredError()
     )
     return model
