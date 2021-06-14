@@ -61,7 +61,7 @@ if __name__ == "__main__":
         train_gen, 
         validation_data=test_gen, 
         # epochs=3, 
-        epochs=50, 
+        epochs=20, 
         steps_per_epoch=2000, 
         validation_steps=200,
         callbacks=[model_checkpoint]
